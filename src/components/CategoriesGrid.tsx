@@ -1,8 +1,9 @@
-import { 
-  Car, Home, Smartphone, Gamepad2, Shirt, Book, 
-  Baby, Bike, Wrench, ChefHat, Music, Heart 
+import {
+  Car, Home, Smartphone, Gamepad2, Shirt, Book,
+  Baby, Bike, Wrench, ChefHat, Music, Heart
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   { icon: Car, name: "Vehicles", count: "2,456", color: "text-blue-600" },
@@ -20,6 +21,12 @@ const categories = [
 ];
 
 const CategoriesGrid = () => {
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/browse?category=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <section className="py-16 bg-muted/30">
       <div className="container px-4">
@@ -36,7 +43,11 @@ const CategoriesGrid = () => {
           {categories.map((category) => {
             const IconComponent = category.icon;
             return (
-              <Card key={category.name} className="group cursor-pointer hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50">
+              <Card
+                key={category.name}
+                className="group cursor-pointer hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 bg-gradient-card border-border/50"
+                onClick={() => handleCategoryClick(category.name)}
+              >
                 <CardContent className="p-6 text-center">
                   <div className="mb-4">
                     <IconComponent className={`h-8 w-8 mx-auto ${category.color} group-hover:scale-110 transition-transform duration-300`} />

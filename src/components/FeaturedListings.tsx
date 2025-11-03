@@ -2,6 +2,7 @@ import { Heart, MapPin, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 // Sample listing data
 const featuredListings = [
@@ -68,6 +69,16 @@ const featuredListings = [
 ];
 
 const FeaturedListings = () => {
+  const navigate = useNavigate();
+
+  const handleCardClick = (listingId: number) => {
+    navigate(`/product/${listingId}`);
+  };
+
+  const handleViewAll = () => {
+    navigate("/browse");
+  };
+
   return (
     <section className="py-16">
       <div className="container px-4">
@@ -80,14 +91,18 @@ const FeaturedListings = () => {
               Discover the best deals and premium listings in your area
             </p>
           </div>
-          <Button variant="outline" className="hidden md:flex">
+          <Button variant="outline" className="hidden md:flex" onClick={handleViewAll}>
             View All Listings
           </Button>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredListings.map((listing) => (
-            <Card key={listing.id} className="group cursor-pointer hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-gradient-card border-border/50">
+            <Card
+              key={listing.id}
+              className="group cursor-pointer hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 overflow-hidden bg-gradient-card border-border/50"
+              onClick={() => handleCardClick(listing.id)}
+            >
               <div className="relative">
                 <img 
                   src={listing.image} 
@@ -99,10 +114,14 @@ const FeaturedListings = () => {
                     Featured
                   </Badge>
                 )}
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
+                <Button
+                  variant="ghost"
+                  size="icon"
                   className="absolute top-3 right-3 bg-background/80 backdrop-blur hover:bg-background"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Handle favorite logic here
+                  }}
                 >
                   <Heart className="h-4 w-4" />
                 </Button>
@@ -136,7 +155,7 @@ const FeaturedListings = () => {
         </div>
 
         <div className="text-center mt-8">
-          <Button variant="outline" className="md:hidden">
+          <Button variant="outline" className="md:hidden" onClick={handleViewAll}>
             View All Listings
           </Button>
         </div>

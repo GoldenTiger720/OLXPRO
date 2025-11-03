@@ -18,6 +18,7 @@ import Dashboard from "./pages/Dashboard";
 import PostAd from "./pages/PostAd";
 import Browse from "./pages/Browse";
 import Settings from "./pages/Settings";
+import ProductDetail from "./pages/ProductDetail";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/browse" element={<Browse />} />
-            
+            <Route path="/product/:id" element={<ProductDetail />} />
+
             {/* Protected User Routes */}
             <Route path="/dashboard" element={
               <ProtectedRoute>

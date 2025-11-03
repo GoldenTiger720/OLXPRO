@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,15 +37,23 @@ import {
 import { Ad, Category, AdFilters } from "@/types/ad";
 
 const categories: Category[] = [
-  { id: "1", name: "Electronics", slug: "electronics", icon: "📱", color: "blue" },
-  { id: "2", name: "Vehicles", slug: "vehicles", icon: "🚗", color: "green" },
-  { id: "3", name: "Real Estate", slug: "real-estate", icon: "🏠", color: "purple" },
-  { id: "4", name: "Fashion", slug: "fashion", icon: "👕", color: "pink" },
-  { id: "5", name: "Home & Garden", slug: "home-garden", icon: "🪴", color: "emerald" },
-  { id: "6", name: "Services", slug: "services", icon: "🛠️", color: "orange" },
+  { id: "1", name: "Vehicles", slug: "vehicles", icon: "🚗", color: "blue" },
+  { id: "2", name: "Real Estate", slug: "real-estate", icon: "🏠", color: "green" },
+  { id: "3", name: "Electronics", slug: "electronics", icon: "📱", color: "purple" },
+  { id: "4", name: "Games & Hobbies", slug: "games-hobbies", icon: "🎮", color: "red" },
+  { id: "5", name: "Fashion", slug: "fashion", icon: "👕", color: "pink" },
+  { id: "6", name: "Books & Media", slug: "books-media", icon: "📚", color: "orange" },
+  { id: "7", name: "Kids & Baby", slug: "kids-baby", icon: "👶", color: "yellow" },
+  { id: "8", name: "Sports", slug: "sports", icon: "🚴", color: "indigo" },
+  { id: "9", name: "Tools & Garden", slug: "tools-garden", icon: "🔧", color: "gray" },
+  { id: "10", name: "Home & Kitchen", slug: "home-kitchen", icon: "🍳", color: "emerald" },
+  { id: "11", name: "Music & Arts", slug: "music-arts", icon: "🎵", color: "cyan" },
+  { id: "12", name: "Health & Beauty", slug: "health-beauty", icon: "��", color: "rose" },
 ];
 
 const Browse = () => {
+  const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [filters, setFilters] = useState<AdFilters>({
     category: "",
@@ -55,6 +64,20 @@ const Browse = () => {
     sortBy: "newest",
   });
 
+  // Read category from URL and set filter
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category");
+    if (categoryFromUrl) {
+      // Find matching category by name
+      const matchingCategory = categories.find(
+        (cat) => cat.name === categoryFromUrl
+      );
+      if (matchingCategory) {
+        setFilters((prev) => ({ ...prev, category: matchingCategory.id }));
+      }
+    }
+  }, [searchParams]);
+
   // Mock data - replace with actual API calls
   const ads: Ad[] = [
     {
@@ -62,8 +85,8 @@ const Browse = () => {
       title: "iPhone 13 Pro Max - Like New",
       description: "Barely used iPhone 13 Pro Max in excellent condition",
       price: 899,
-      images: ["/placeholder.svg"],
-      category: categories[0],
+      images: ["https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&h=600&fit=crop"],
+      category: categories[2], // Electronics
       tags: ["phone", "iphone", "mobile"],
       location: { city: "New York", state: "NY", country: "USA" },
       userId: "1",
@@ -82,8 +105,8 @@ const Browse = () => {
       title: "2019 Honda Civic - Low Mileage",
       description: "Well maintained Honda Civic with only 25,000 miles",
       price: 18500,
-      images: ["/placeholder.svg"],
-      category: categories[1],
+      images: ["https://images.unsplash.com/photo-1619405399517-d7fce0f13302?w=800&h=600&fit=crop"],
+      category: categories[0], // Vehicles
       tags: ["car", "honda", "sedan"],
       location: { city: "Los Angeles", state: "CA", country: "USA" },
       userId: "2",
@@ -102,8 +125,8 @@ const Browse = () => {
       title: "Modern 2BR Apartment Downtown",
       description: "Spacious 2 bedroom apartment in the heart of downtown",
       price: 2500,
-      images: ["/placeholder.svg"],
-      category: categories[2],
+      images: ["https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=600&fit=crop"],
+      category: categories[1], // Real Estate
       tags: ["apartment", "rental", "downtown"],
       location: { city: "Chicago", state: "IL", country: "USA" },
       userId: "3",
@@ -116,6 +139,186 @@ const Browse = () => {
       createdAt: new Date("2024-03-05"),
       updatedAt: new Date(),
       expiresAt: new Date("2024-04-05"),
+    },
+    {
+      id: "4",
+      title: "Gaming Laptop - RTX 3070",
+      description: "High-performance gaming laptop with NVIDIA RTX 3070",
+      price: 1299,
+      images: ["https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800&h=600&fit=crop"],
+      category: categories[2], // Electronics
+      tags: ["laptop", "gaming", "computer"],
+      location: { city: "Austin", state: "TX", country: "USA" },
+      userId: "4",
+      user: { id: "4", name: "Tech Seller", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: false,
+      views: 189,
+      favorites: 23,
+      createdAt: new Date("2024-03-08"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-08"),
+    },
+    {
+      id: "5",
+      title: "Designer Leather Handbag",
+      description: "Authentic designer handbag in excellent condition",
+      price: 450,
+      images: ["https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&h=600&fit=crop"],
+      category: categories[4], // Fashion
+      tags: ["handbag", "designer", "fashion"],
+      location: { city: "Miami", state: "FL", country: "USA" },
+      userId: "5",
+      user: { id: "5", name: "Fashion Hub", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: true,
+      views: 345,
+      favorites: 67,
+      createdAt: new Date("2024-03-10"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-10"),
+    },
+    {
+      id: "6",
+      title: "PlayStation 5 Console Bundle",
+      description: "PS5 with extra controller and 3 games included",
+      price: 550,
+      images: ["https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=800&h=600&fit=crop"],
+      category: categories[3], // Games & Hobbies
+      tags: ["ps5", "gaming", "console"],
+      location: { city: "Seattle", state: "WA", country: "USA" },
+      userId: "6",
+      user: { id: "6", name: "Gamer Store", avatar: "" },
+      status: "approved",
+      featured: true,
+      premium: false,
+      views: 892,
+      favorites: 134,
+      createdAt: new Date("2024-03-12"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-12"),
+    },
+    {
+      id: "7",
+      title: "Vintage Leather Sofa",
+      description: "Beautiful vintage leather sofa in great condition",
+      price: 680,
+      images: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop"],
+      category: categories[9], // Home & Kitchen
+      tags: ["furniture", "sofa", "vintage"],
+      location: { city: "Portland", state: "OR", country: "USA" },
+      userId: "7",
+      user: { id: "7", name: "Home Decor", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: false,
+      views: 267,
+      favorites: 41,
+      createdAt: new Date("2024-03-14"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-14"),
+    },
+    {
+      id: "8",
+      title: "Mountain Bike - Trek X-Caliber",
+      description: "Excellent condition mountain bike, perfect for trails",
+      price: 850,
+      images: ["https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&h=600&fit=crop"],
+      category: categories[7], // Sports
+      tags: ["bike", "mountain bike", "trek"],
+      location: { city: "Denver", state: "CO", country: "USA" },
+      userId: "8",
+      user: { id: "8", name: "Bike Shop", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: true,
+      views: 456,
+      favorites: 78,
+      createdAt: new Date("2024-03-16"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-16"),
+    },
+    {
+      id: "9",
+      title: "Canon EOS R6 Camera",
+      description: "Professional mirrorless camera with 24-105mm lens",
+      price: 2100,
+      images: ["https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=800&h=600&fit=crop"],
+      category: categories[2], // Electronics
+      tags: ["camera", "canon", "photography"],
+      location: { city: "San Francisco", state: "CA", country: "USA" },
+      userId: "9",
+      user: { id: "9", name: "Photo Pro", avatar: "" },
+      status: "approved",
+      featured: true,
+      premium: true,
+      views: 634,
+      favorites: 98,
+      createdAt: new Date("2024-03-18"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-18"),
+    },
+    {
+      id: "10",
+      title: "Collectible Books Set",
+      description: "Rare first edition book collection",
+      price: 320,
+      images: ["https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&h=600&fit=crop"],
+      category: categories[5], // Books & Media
+      tags: ["books", "collectible", "vintage"],
+      location: { city: "Boston", state: "MA", country: "USA" },
+      userId: "10",
+      user: { id: "10", name: "Book Lover", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: false,
+      views: 178,
+      favorites: 29,
+      createdAt: new Date("2024-03-20"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-20"),
+    },
+    {
+      id: "11",
+      title: "Baby Stroller - Premium",
+      description: "Top-rated baby stroller with all accessories",
+      price: 280,
+      images: ["https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&h=600&fit=crop"],
+      category: categories[6], // Kids & Baby
+      tags: ["stroller", "baby", "kids"],
+      location: { city: "Atlanta", state: "GA", country: "USA" },
+      userId: "11",
+      user: { id: "11", name: "Baby Gear", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: false,
+      views: 312,
+      favorites: 45,
+      createdAt: new Date("2024-03-22"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-22"),
+    },
+    {
+      id: "12",
+      title: "Electric Guitar - Fender",
+      description: "Fender Stratocaster electric guitar with amp",
+      price: 980,
+      images: ["https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=800&h=600&fit=crop"],
+      category: categories[10], // Music & Arts
+      tags: ["guitar", "fender", "music"],
+      location: { city: "Nashville", state: "TN", country: "USA" },
+      userId: "12",
+      user: { id: "12", name: "Music Store", avatar: "" },
+      status: "approved",
+      featured: false,
+      premium: true,
+      views: 523,
+      favorites: 89,
+      createdAt: new Date("2024-03-24"),
+      updatedAt: new Date(),
+      expiresAt: new Date("2024-04-24"),
     },
   ];
 
@@ -233,9 +436,13 @@ const Browse = () => {
   );
 
   const AdCard = ({ ad }: { ad: Ad }) => {
+    const handleCardClick = () => {
+      navigate(`/product/${ad.id}`);
+    };
+
     if (viewMode === "list") {
       return (
-        <Card className="overflow-hidden">
+        <Card className="overflow-hidden cursor-pointer hover:shadow-lg transition-shadow" onClick={handleCardClick}>
           <CardContent className="p-4">
             <div className="flex gap-4">
               <img
@@ -280,7 +487,7 @@ const Browse = () => {
                       {ad.favorites}
                     </span>
                   </div>
-                  <Button size="sm">View Details</Button>
+                  <Button size="sm" onClick={(e) => e.stopPropagation()}>View Details</Button>
                 </div>
               </div>
             </div>
@@ -290,7 +497,7 @@ const Browse = () => {
     }
 
     return (
-      <Card className="overflow-hidden hover:shadow-lg transition-shadow">
+      <Card className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={handleCardClick}>
         <div className="relative">
           <img
             src={ad.images[0]}
@@ -307,6 +514,10 @@ const Browse = () => {
             size="icon"
             variant="ghost"
             className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Handle favorite logic here
+            }}
           >
             <Heart className="h-4 w-4" />
           </Button>
